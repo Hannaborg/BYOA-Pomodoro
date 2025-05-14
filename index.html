@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pomodoro Timer</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,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">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,9 +13,15 @@
         <div class="timer">
             <div class="time-display">25:00</div>
             <div class="progress-ring">
-                <svg width="200" height="200">
-                    <circle class="progress-ring-circle-bg" cx="100" cy="100" r="90"/>
-                    <circle class="progress-ring-circle" cx="100" cy="100" r="90"/>
+                <svg width="280" height="280">
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color: #6366f1" />
+                            <stop offset="100%" style="stop-color: #4f46e5" />
+                        </linearGradient>
+                    </defs>
+                    <circle class="progress-ring-circle-bg" cx="140" cy="140" r="130"/>
+                    <circle class="progress-ring-circle" cx="140" cy="140" r="130"/>
                 </svg>
             </div>
         </div>
@@ -24,9 +31,13 @@
             <button id="reset">Reset</button>
         </div>
         <div class="mode-selector">
-            <button class="mode-btn active" data-mode="pomodoro">Pomodoro</button>
-            <button class="mode-btn" data-mode="shortBreak">Short Break</button>
-            <button class="mode-btn" data-mode="longBreak">Long Break</button>
+            <div class="mode-primary">
+                <button class="mode-btn active" data-mode="pomodoro">Pomodoro</button>
+            </div>
+            <div class="mode-secondary">
+                <button class="mode-btn" data-mode="shortBreak">Short Break</button>
+                <button class="mode-btn" data-mode="longBreak">Long Break</button>
+            </div>
         </div>
         <div class="session-count">Sessions: 0/4</div>
     </div>

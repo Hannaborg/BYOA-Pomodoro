@@ -14,6 +14,7 @@ class PomodoroTimer {
         this.currentMode = 'pomodoro';
         this.sessions = 0;
         this.maxSessions = 4;
+        this.originalTitle = document.title;
 
         // DOM elements
         this.timeDisplay = document.querySelector('.time-display');
@@ -39,6 +40,9 @@ class PomodoroTimer {
             btn.addEventListener('click', (e) => this.changeMode(e.target.dataset.mode));
         });
 
+        // Handle visibility change
+        document.addEventListener('visibilitychange', () => this.handleVisibilityChange());
+
         // Initialize display
         this.updateDisplay();
         this.updateSessionCount();
@@ -51,7 +55,13 @@ class PomodoroTimer {
     }
 
     updateDisplay() {
-        this.timeDisplay.textContent = this.formatTime(this.timeLeft);
+        const timeString = this.formatTime(this.timeLeft);
+        this.timeDisplay.textContent = timeString;
+        
+        // Update title with current time and mode
+        const modeEmoji = this.currentMode === 'pomodoro' ? '🍅' : '☕';
+        document.title = `${timeString} ${modeEmoji} - Pomodoro`;
+        
         const progress = 1 - (this.timeLeft / this.settings[this.currentMode]);
         const offset = this.circumference * progress;
         this.progressRing.style.strokeDashoffset = this.circumference - offset;
@@ -61,20 +71,39 @@ class PomodoroTimer {
         this.sessionCount.textContent = `Sessions: ${this.sessions}/${this.maxSessions}`;
     }
 
+    handleVisibilityChange() {
+        if (document.hidden) {
+            // Tab is hidden, no need to update as frequently
+            if (this.timerId) {
+                clearInterval(this.timerId);
+                this.timerId = setInterval(() => this.tick(), 1000);
+            }
+        } else {
+            // Tab is visible again, update immediately
+            this.updateDisplay();
+            if (this.isRunning) {
+                clearInterval(this.timerId);
+                this.timerId = setInterval(() => this.tick(), 1000);
+            }
+        }
+    }
+
+    tick() {
+        this.timeLeft--;
+        this.updateDisplay();
+
+        if (this.timeLeft <= 0) {
+            this.handleTimerComplete();
+        }
+    }
+
     start() {
         if (this.isRunning) return;
         
         this.isRunning = true;
         this.startButton.disabled = true;
         
-        this.timerId = setInterval(() => {
-            this.timeLeft--;
-            this.updateDisplay();
-
-            if (this.timeLeft <= 0) {
-                this.handleTimerComplete();
-            }
-        }, 1000);
+        this.timerId = setInterval(() => this.tick(), 1000);
     }
 
     pause() {
@@ -135,7 +164,7 @@ class PomodoroTimer {
         if (Notification.permission === 'granted') {
             new Notification('Pomodoro Timer', {
                 body: `${this.currentMode === 'pomodoro' ? 'Break time!' : 'Time to focus!'}`,
-                icon: 'https://example.com/icon.png'
+                icon: 'favicon.ico'
             });
         } else if (Notification.permission !== 'denied') {
             Notification.requestPermission();
